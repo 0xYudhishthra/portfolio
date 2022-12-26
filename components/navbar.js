@@ -15,7 +15,7 @@ import {
   Heading
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import ThemeToggleButton from './theme-toggle-button';
+import ThemeToggleButton from './themeToggleButton';
 
 const LinkItem = ({ href, path, children }) => {
   const active = path === href;
@@ -39,7 +39,7 @@ const Navbar = props => {
 
   return (
     <Box
-      position="fixed"
+      position="relative"
       as="nav"
       w="100%"
       bg={useColorModeValue('#ffffff40', '20202380')}
@@ -54,61 +54,66 @@ const Navbar = props => {
         wrap="wrap"
         align="center"
         justify="space-between"
+        mt={5}
       >
-        <Flex align="center" mr={5}>
-          <Box flex={5} align="right">
-            <ThemeToggleButton />
-            <Box ml={2} display={{ base: 'inline-block', md: 'none' }}>
-              {/* Create a hamburger menu that displays the menu items horizontally and not vertically when clicked on */}
-              <Menu>
-                <MenuButton
-                  as={IconButton}
-                  aria-label="Options"
-                  icon={<HamburgerIcon />}
-                  variant="ghost"
-                />
-                <MenuList>
-                  <MenuItem>
-                    <LinkItem href="/" path={path}>
-                      Home
-                    </LinkItem>
-                  </MenuItem>
-                  <MenuItem>
-                    <LinkItem href="/about" path={path}>
-                      About
-                    </LinkItem>
-                  </MenuItem>
-                  <MenuItem>
-                    <LinkItem href="/projects" path={path}>
-                      Projects
-                    </LinkItem>
-                  </MenuItem>
-                  <MenuItem>
-                    <LinkItem href="/blog" path={path}>
-                      Blog
-                    </LinkItem>
-                  </MenuItem>
-                  <MenuItem>
-                    <LinkItem href="https://www.yudhishthra.com/" path={path}>
-                      View Source
-                    </LinkItem>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </Box>
-          </Box>
-          <Heading as="h1" size="lg" letterSpacing={'tight'}>
+        <Flex align="center" ml={5}>
+          <Heading as="h1" size="lg">
             <Logo />
           </Heading>
         </Flex>
-
+        <Box flex={2} align="right">
+          <Box
+            ml={10}
+            display={{ base: 'inline-block', md: 'none' }}
+            justify="center"
+            pr={2}
+          >
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<HamburgerIcon />}
+                variant="outline"
+              />
+              <MenuList>
+                <MenuItem>
+                  <LinkItem href="/" path={path}>
+                    Home
+                  </LinkItem>
+                </MenuItem>
+                <MenuItem>
+                  <LinkItem href="/about" path={path}>
+                    About
+                  </LinkItem>
+                </MenuItem>
+                <MenuItem>
+                  <LinkItem href="/projects" path={path}>
+                    Projects
+                  </LinkItem>
+                </MenuItem>
+                <MenuItem>
+                  <LinkItem href="/blog" path={path}>
+                    Blog
+                  </LinkItem>
+                </MenuItem>
+                <MenuItem>
+                  <LinkItem href="https://www.yudhishthra.com/" path={path}>
+                    View Source
+                  </LinkItem>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>
+        </Box>
         <Stack
           direction={{ base: 'column', md: 'row' }}
           display={{ base: 'none', md: 'flex' }}
           width={{ base: 'full', md: 'auto' }}
           alignItems="center"
-          flexGrow={1}
-          mt={{ base: 4, md: 0 }}
+          flexGrow={5}
+          textTransform="lowercase"
+          fontSize={{ base: 'sm', md: 'xl' }}
+          color={useColorModeValue('#274C77', '#ffffff')}
         >
           <LinkItem href="/about" path={path}>
             About
@@ -126,6 +131,7 @@ const Navbar = props => {
             Contact
           </LinkItem>
         </Stack>
+        <ThemeToggleButton />
       </Container>
     </Box>
   );
