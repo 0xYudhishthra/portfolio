@@ -5,16 +5,12 @@ import styled from '@emotion/styled';
 
 const LogoBox = styled.span`
   font-weight: bold;
-  font-size: 18px;
+  font-size: 20px;
   display: inline-flex;
   align-items: center;
   height: 30px;
   line-height: 20px;
-  padding: 10px;
-
-  &:hover img {
-    transform: rotate(20deg);
-  }
+  padding-right: 75px;
 `;
 
 const Logo = () => {
@@ -24,7 +20,7 @@ const Logo = () => {
     <Link href="/" legacyBehavior>
       <a>
         <LogoBox>
-          <Image src={footPrintImg} alt="logo" width={20} height={20} />
+          <Image src={footPrintImg} alt="logo" width={50} height={50} />
         </LogoBox>
       </a>
     </Link>
