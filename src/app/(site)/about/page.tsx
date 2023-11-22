@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { getProfile } from "../../../sanity/sanity.query";
-import type { ProfileType } from "../../../types";
+import { getProfile } from "../../../../sanity/sanity.query";
+import type { ProfileType } from "../../../../types";
 import { PortableText } from "@portabletext/react";
 import { BiEnvelope, BiFile } from "react-icons/bi";
 
