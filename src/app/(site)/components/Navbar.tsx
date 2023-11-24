@@ -1,16 +1,14 @@
+// The first line must be at the top of the file, without any imports above it.
 "use client";
 
-// Navbar.tsx
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../icons/logo.png";
 import { useRef } from "react";
 
 export default function Navbar() {
-  // Use a ref for the menu element
-  const menuRef = useRef();
+  const menuRef = useRef(null);
 
-  // Toggle the visibility of the menu
   const toggleNavbar = () => {
     if (menuRef.current) {
       menuRef.current.classList.toggle("hidden");
@@ -30,7 +28,7 @@ export default function Navbar() {
           <span className="text-3xl">☰</span>
         </div>
         {/* Navigation menu */}
-        <nav id="nav-menu" className="hidden md:flex">
+        <nav ref={menuRef} className="hidden md:flex">
           <ul className="flex flex-col md:flex-row items-center gap-x-8">
             <li>
               <Link href="/about">
