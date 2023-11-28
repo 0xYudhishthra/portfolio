@@ -3,12 +3,12 @@ export default function ProfileHeader() {
     <header className="flex flex-col items-center justify-center h-screen">
       <div className="flex flex-col items-center justify-center h-full">
         <h1
-          className="text-6xl font-bold text-center"
+          className="text-5xl font-bold text-center"
           style={{ color: "#2f5597" }}
         >
           YUDHISHTHRA SUGUMARAN
         </h1>
-        <p className="text-2xl text-gray-600 mt-2 text-center">
+        <p className="text-3xl text-gray-600 mt-2 text-center">
           developer + pentester
         </p>
       </div>
