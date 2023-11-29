@@ -72,15 +72,35 @@ const SectionStack = () => {
   const [sections, setSections] = useState(sectionsData);
   const controls = useAnimation();
   const scrollY = useRef(0);
+  const isAtStart = useRef(true); // Track if at the start of the sequence
+  const isAtEnd = useRef(false); // Track if at the end of the sequence
 
-  // Listen to scroll events and animate based on the direction
   useEffect(() => {
     const updateSections = (direction) => {
       setSections((currentSections) => {
-        if (direction === "down" && currentSections.length > 1) {
-          return move(currentSections, 0, currentSections.length - 1);
-        } else if (direction === "up" && currentSections.length > 1) {
-          return move(currentSections, currentSections.length - 1, 0);
+        if (direction === "down") {
+          if (!isAtEnd.current && currentSections.length > 1) {
+            isAtStart.current = false;
+            const newSections = move(
+              currentSections,
+              0,
+              currentSections.length - 1
+            );
+            isAtEnd.current = newSections[0].id === sectionsData[0].id;
+            return newSections;
+          }
+        } else if (direction === "up") {
+          if (!isAtStart.current && currentSections.length > 1) {
+            isAtEnd.current = false;
+            const newSections = move(
+              currentSections,
+              currentSections.length - 1,
+              0
+            );
+            isAtStart.current =
+              newSections[0].id === sectionsData[sectionsData.length - 1].id;
+            return newSections;
+          }
         }
         return currentSections;
       });
@@ -92,8 +112,7 @@ const SectionStack = () => {
       scrollY.current = window.scrollY;
     };
 
-    // Increase the throttle delay to make the scroll event handling slower
-    const throttledHandleScroll = throttle(handleScroll, 500); // Increased from 100 to 200
+    const throttledHandleScroll = throttle(handleScroll, 400);
     window.addEventListener("scroll", throttledHandleScroll);
 
     return () => {
@@ -106,10 +125,11 @@ const SectionStack = () => {
       y: i * -SECTION_OFFSET,
       scale: 1 - i * SCALE_FACTOR,
       transition: {
-        delay: i * 0.2, // Increase delay for a slower animation
+        delay: i * 0.01,
         type: "spring",
-        stiffness: 60, // Lower stiffness for a softer spring effect
-        damping: 30, // Increase damping for less oscillation
+        stiffness: 60,
+        damping: 30,
+        duration: 1, // Duration should be a value in seconds, not milliseconds
       },
     }));
   }, [controls, sections]);
@@ -145,12 +165,13 @@ const wrapperStyle = {
   justifyContent: "center",
 };
 
+// Modify the styles for the cards
 const sectionStyle = {
   position: "absolute",
-  width: "95%", // Adjust to the width of your sections
+  width: "90%", // Adjust to the width of your sections
   height: "90%", // Adjust to the height of your sections
   borderRadius: "50px",
-  transformOrigin: "center center",
+  transformOrigin: "right center", // Set origin for rotation effect
   listStyle: "none",
   display: "flex",
   justifyContent: "center",
@@ -158,6 +179,7 @@ const sectionStyle = {
   flexDirection: "column",
   padding: "50px",
   boxSizing: "border-box",
+  perspective: "1000px", // Add perspective for 3D effect
 };
 
 export default SectionStack;
