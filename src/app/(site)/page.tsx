@@ -1,110 +1,163 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { ContactForm } from "./components";
-import "../globals.css";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useAnimation } from "framer-motion";
+import throttle from "lodash.throttle";
+import move from "lodash-move";
 
-export default function Home() {
-  const sectionRefs = useRef([]);
+const sectionsData = [
+  {
+    id: "main-intro",
+    color: "#266678",
+    content: (
+      <div>
+        <h1>Welcome to My Portfolio</h1>
+        <p>
+          This is the main introduction section where I tell you a bit about
+          myself and what I do.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "who-am-i",
+    color: "#cb7c7a",
+    content: (
+      <div>
+        <h2>Who Am I?</h2>
+        <p>
+          I am a passionate developer with a love for creating seamless user
+          experiences.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "achievements",
+    color: "#36a18b",
+    content: (
+      <div>
+        <h2>My Achievements</h2>
+        <ul>
+          <li>
+            Lead Developer at XYZ Corp, where I increased performance by 20%.
+          </li>
+          <li>Speaker at the Annual Tech Conference 2022.</li>
+          <li>Published 10+ articles on modern web development practices.</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    id: "contact-form",
+    color: "#cda35f",
+    content: (
+      <div>
+        <h2>Contact Me</h2>
+        <form>
+          <input type="text" placeholder="Your Name" />
+          <input type="email" placeholder="Your Email" />
+          <textarea placeholder="Your Message"></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    ),
+  },
+];
 
+const SECTION_OFFSET = 30; // The visual offset for each section stack
+const SCALE_FACTOR = 0.05; // The scale difference between each section stack
+
+const SectionStack = () => {
+  const [sections, setSections] = useState(sectionsData);
+  const controls = useAnimation();
+  const scrollY = useRef(0);
+
+  // Listen to scroll events and animate based on the direction
   useEffect(() => {
-    sectionRefs.current = sectionRefs.current.slice(0, 4); // Assuming 4 sections including ContactForm
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Add 'cd-selected' class to the intersecting section
-            entry.target.classList.add("cd-selected");
-          } else {
-            // Remove 'cd-selected' class from non-intersecting sections
-            entry.target.classList.remove("cd-selected");
-          }
-        });
-      },
-      { threshold: 0.5 } // Trigger when half of the section is visible
-    );
+    const updateSections = (direction) => {
+      setSections((currentSections) => {
+        if (direction === "down" && currentSections.length > 1) {
+          return move(currentSections, 0, currentSections.length - 1);
+        } else if (direction === "up" && currentSections.length > 1) {
+          return move(currentSections, currentSections.length - 1, 0);
+        }
+        return currentSections;
+      });
+    };
 
-    sectionRefs.current.forEach((ref) => {
-      if (ref.current) {
-        observer.observe(ref.current);
-      }
-    });
+    const handleScroll = () => {
+      const direction = window.scrollY > scrollY.current ? "down" : "up";
+      updateSections(direction);
+      scrollY.current = window.scrollY;
+    };
+
+    // Increase the throttle delay to make the scroll event handling slower
+    const throttledHandleScroll = throttle(handleScroll, 500); // Increased from 100 to 200
+    window.addEventListener("scroll", throttledHandleScroll);
 
     return () => {
-      sectionRefs.current.forEach((ref) => {
-        if (ref.current) {
-          observer.unobserve(ref.current);
-        }
-      });
+      window.removeEventListener("scroll", throttledHandleScroll);
     };
   }, []);
 
+  useEffect(() => {
+    controls.start((i) => ({
+      y: i * -SECTION_OFFSET,
+      scale: 1 - i * SCALE_FACTOR,
+      transition: {
+        delay: i * 0.2, // Increase delay for a slower animation
+        type: "spring",
+        stiffness: 60, // Lower stiffness for a softer spring effect
+        damping: 30, // Increase damping for less oscillation
+      },
+    }));
+  }, [controls, sections]);
+
   return (
-    <main className="cd-fixed-bg cd-auto-hide-header">
-      {/* Main Intro Section */}
-      <section
-        ref={(el) => (sectionRefs.current[0] = el)}
-        className="cd-section"
-      >
-        <h1 className="text-5xl font-bold" style={{ color: "#2f5597" }}>
-          YUDHISHTHRA SUGUMARAN
-        </h1>
-        <p className="text-3xl text-gray-600 mt-4">developer + pentester</p>{" "}
-      </section>
-
-      {/* Who Am I Section */}
-      <section
-        ref={(el) => (sectionRefs.current[1] = el)}
-        className="cd-section"
-      >
-        <h2 className="text-4xl font-bold mb-4">Who am I</h2>
-        <p className="text-gray-700 text-base mb-4">
-          Yudhishthra Sugumaran is a software engineering student, hackathon
-          hacker, and cybersecurity enthusiast with a strong drive to positively
-          impact people's lives.
-        </p>
-        <p className="text-gray-700 text-base">
-          When not coding or hacking, he likes to binge-watch shows on Netflix,
-          do activities that soothe the soul and mind, and values spending
-          quality time with family and friends.
-        </p>
-        <a
-          href="#full-story"
-          className="text-indigo-600 hover:text-indigo-800 transition duration-300"
+    <div style={wrapperStyle}>
+      {sections.map((section, index) => (
+        <motion.div
+          custom={index}
+          animate={controls}
+          key={section.id}
+          style={{
+            ...sectionStyle,
+            backgroundColor: section.color,
+            zIndex: sections.length - index,
+          }}
         >
-          Read his full story here.
-        </a>
-      </section>
-
-      {/* Achievements Section */}
-      <section
-        ref={(el) => (sectionRefs.current[2] = el)}
-        className="cd-section"
-      >
-        <h2 className="text-4xl font-bold mb-4">Top achievements</h2>
-        <div className="flex justify-around">
-          <div>
-            <span className="text-5xl font-bold">8</span>
-            <p className="text-base text-gray-600">hackathons joined</p>
-          </div>
-          <div>
-            <span className="text-5xl font-bold">11</span>
-            <p className="text-base text-gray-600">CTFs joined</p>
-          </div>
-          <div>
-            <span className="text-5xl font-bold">6</span>
-            <p className="text-base text-gray-600">awards received</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form Section */}
-      <section
-        ref={(el) => (sectionRefs.current[3] = el)}
-        className="cd-section"
-      >
-        {/* <ContactForm /> */}
-      </section>
-    </main>
+          {section.content}
+        </motion.div>
+      ))}
+    </div>
   );
-}
+};
+
+const wrapperStyle = {
+  position: "relative",
+  width: "100%", // Adjust to the width of your sections
+  height: "100vh", // Adjust to the height of your container
+  overflow: "hidden", // Prevent scrolling to see the dragged section
+  display: "flex",
+  flexDirection: "column-reverse", // Stack sections bottom to top
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+const sectionStyle = {
+  position: "absolute",
+  width: "95%", // Adjust to the width of your sections
+  height: "90%", // Adjust to the height of your sections
+  borderRadius: "50px",
+  transformOrigin: "center center",
+  listStyle: "none",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection: "column",
+  padding: "50px",
+  boxSizing: "border-box",
+};
+
+export default SectionStack;

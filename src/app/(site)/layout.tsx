@@ -4,7 +4,7 @@ import "../globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Footer, Navbar } from "./components";
-import { BrowserRouter as Router } from "react-router-dom";
+import { ParallaxProvider } from "react-scroll-parallax";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-white`}>
         <Navbar />
-        {children}
+        <ParallaxProvider>{children}</ParallaxProvider>
         <Footer />
       </body>
     </html>
