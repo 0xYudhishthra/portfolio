@@ -13,7 +13,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex items-center justify-between bg-white pl-16 pt-16 pr-16">
+    <nav className="flex items-center justify-between bg-white pl-16 pt-10 pr-16">
       {/* Left section: Hamburger menu and logo */}
       <div className="flex items-center">
         <button onClick={toggleMenu} className="focus:outline-none mr-5">

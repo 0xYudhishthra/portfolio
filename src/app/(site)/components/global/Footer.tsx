@@ -6,11 +6,14 @@ export default function Footer() {
 
   return (
     <footer>
-      <div className="mx-auto px-8 py-10 flex justify-between text-zinc-400">
+      <div className="mx-auto px-8 py-5 flex justify-between text-zinc-400">
         {/* Left Section */}
         <div className="justify-left pl-10">
           {" "}
-          <p>Designed in Figma. Developed using MERN. Hosted on Heroku.</p>
+          <p>
+            Designed in Figma. Developed using Next.JS + TailwindCSS. Hosted on
+            Vercel.
+          </p>
           <p>
             {"\n"}© {currentYear}. All rights reserved. Yudhishthra Sugumaran.
           </p>
@@ -67,7 +70,7 @@ export default function Footer() {
           </a>
           <a
             href="#"
-            className="hover:text-white transition duration-200 flex items-center pl-5"
+            className="hover:text-white transition duration-200 flex items-center pl-5 blink"
           >
             <Icon
               icon="material-symbols-light:arrow-circle-up-outline"

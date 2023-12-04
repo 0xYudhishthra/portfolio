@@ -2,29 +2,156 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
-import throttle from "lodash.throttle";
 import move from "lodash-move";
+import { Icon } from "@iconify/react";
+
+const arrowStyle = {
+  position: "fixed",
+  right: "50px",
+  fontSize: "24px",
+  cursor: "pointer",
+  zIndex: 1000,
+  // Ensure transform origin is consistent
+  transformOrigin: "center",
+};
+
+const moveCardsTextStyle = {
+  position: "fixed",
+  right: "20px",
+  top: "50%",
+  transform: "translateY(-50%) rotate(90deg)",
+  color: "#FF8C00",
+  fontSize: "18px",
+  zIndex: 1000,
+};
+
+const wrapperStyle = {
+  position: "relative",
+  width: "95%", // Adjust to the width of your sections
+  height: "80vh", // Adjust to the height of your container
+  overflow: "hidden", // Prevent scrolling to see the dragged section
+  display: "flex",
+  flexDirection: "column-reverse", // Stack sections bottom to top
+  alignItems: "center",
+  justifyContent: "center",
+  //border color orange
+};
+
+// Modify the styles for the cards
+const sectionStyle = {
+  position: "absolute",
+  width: "90%", // Adjust to the width of your sections
+  height: "85%", // Adjust to the height of your sections
+  borderRadius: "18px",
+  transformOrigin: "right center", // Set origin for rotation effect
+  listStyle: "none",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection: "column",
+  padding: "50px",
+  boxSizing: "border-box",
+  perspective: "1000px", // Add perspective for 3D effect
+  border: "5px solid #FF8C00",
+};
+
+const mainIntroStyle = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100%", // Adjust height as needed
+  color: "#333", // Dark text color
+  fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', // Font similar to the image
+  padding: "20px", // Padding around the content
+  position: "relative", // For positioning the download button
+};
+
+// Update the styles for the download button
+const downloadButtonStyle = {
+  backgroundColor: "#e76e54", // Button color similar to the image
+  color: "white",
+  padding: "10px 20px",
+  textTransform: "uppercase",
+  fontWeight: "bold",
+  fontSize: "14px",
+  cursor: "pointer",
+  marginTop: "15px", // Add some space above the button
+  // Remove positioning styles that were previously used to place the button on the side
+};
+
+const nameStyle = {
+  margin: "0",
+  fontSize: "3rem", // Large font size for the name
+  fontWeight: "bold",
+  letterSpacing: "1px", // Spacing between letters
+};
+
+const roleStyle = {
+  margin: "0",
+  fontSize: "1.5rem", // Smaller font size for the role
+  color: "#555", // Slightly lighter text color for the role
+  fontWeight: "normal",
+};
+
+// // The tab styles for left and right positioning
+// const leftTabStyle = {
+//   left: "5px", // Position on the left edge
+//   transform: "translateY(-100%)", // Move it up 100% of its height
+// };
+
+// const rightTabStyle = {
+//   right: "5px", // Position on the right edge
+//   transform: "translateY(-100%)", // Move it up 100% of its height
+// };
+
+// // Existing tabStyle modified for common properties
+// const tabStyle = {
+//   position: "absolute",
+//   top: 0,
+//   padding: "5px 10px",
+//   backgroundColor: "#FF8C00",
+//   borderTopRightRadius: "5px",
+//   borderTopLeftRadius: "5px",
+//   color: "white",
+//   fontWeight: "bold",
+//   textAlign: "center",
+//   zIndex: 10, // Ensure it's above the card content
+// };
+
+// Tab component now accepts a 'left' prop to determine its position
+// const Tab = ({ title, left }) => (
+//   <div style={{ ...tabStyle, ...(left ? leftTabStyle : rightTabStyle) }}>
+//     {title}
+//   </div>
+// );
 
 const sectionsData = [
   {
     id: "main-intro",
-    color: "#266678",
+    color: "#ffffff", // Assuming a light grey background similar to the image
     content: (
-      <div>
-        <h1>Welcome to My Portfolio</h1>
-        <p>
-          This is the main introduction section where I tell you a bit about
-          myself and what I do.
-        </p>
+      <div style={mainIntroStyle}>
+        <h1 style={nameStyle}>YUDHISHTHRA SUGUMARAN</h1>
+        <h2 style={roleStyle}>developer + pentester</h2>
+        <div style={downloadButtonStyle}>DOWNLOAD CV</div>{" "}
+        {/* Moved this line */}
       </div>
     ),
   },
   {
     id: "who-am-i",
-    color: "#cb7c7a",
+    color: "#f0f0f0",
+    leftTab: true,
     content: (
-      <div>
-        <h2>Who Am I?</h2>
+      // <div>
+      //   <h2>Who Am I?</h2>
+      //   <p>
+      //     I am a passionate developer with a love for creating seamless user
+      //     experiences.
+      //   </p>
+      // </div>
+      <div style={mainIntroStyle}>
         <p>
           I am a passionate developer with a love for creating seamless user
           experiences.
@@ -34,7 +161,7 @@ const sectionsData = [
   },
   {
     id: "achievements",
-    color: "#36a18b",
+    color: "#f0f0f0",
     content: (
       <div>
         <h2>My Achievements</h2>
@@ -50,7 +177,7 @@ const sectionsData = [
   },
   {
     id: "contact-form",
-    color: "#cda35f",
+    color: "#f0f0f0",
     content: (
       <div>
         <h2>Contact Me</h2>
@@ -71,54 +198,27 @@ const SCALE_FACTOR = 0.05; // The scale difference between each section stack
 const SectionStack = () => {
   const [sections, setSections] = useState(sectionsData);
   const controls = useAnimation();
-  const scrollY = useRef(0);
-  const isAtStart = useRef(true); // Track if at the start of the sequence
-  const isAtEnd = useRef(false); // Track if at the end of the sequence
 
-  useEffect(() => {
-    const updateSections = (direction) => {
-      setSections((currentSections) => {
-        if (direction === "down") {
-          if (!isAtEnd.current && currentSections.length > 1) {
-            isAtStart.current = false;
-            const newSections = move(
-              currentSections,
-              0,
-              currentSections.length - 1
-            );
-            isAtEnd.current = newSections[0].id === sectionsData[0].id;
-            return newSections;
-          }
-        } else if (direction === "up") {
-          if (!isAtStart.current && currentSections.length > 1) {
-            isAtEnd.current = false;
-            const newSections = move(
-              currentSections,
-              currentSections.length - 1,
-              0
-            );
-            isAtStart.current =
-              newSections[0].id === sectionsData[sectionsData.length - 1].id;
-            return newSections;
-          }
-        }
-        return currentSections;
-      });
-    };
-
-    const handleScroll = () => {
-      const direction = window.scrollY > scrollY.current ? "down" : "up";
-      updateSections(direction);
-      scrollY.current = window.scrollY;
-    };
-
-    const throttledHandleScroll = throttle(handleScroll, 400);
-    window.addEventListener("scroll", throttledHandleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", throttledHandleScroll);
-    };
-  }, []);
+  const updateSections = (direction) => {
+    setSections((currentSections) => {
+      if (direction === "down") {
+        const newSections = move(
+          currentSections,
+          0,
+          currentSections.length - 1
+        );
+        return newSections;
+      } else if (direction === "up") {
+        const newSections = move(
+          currentSections,
+          currentSections.length - 1,
+          0
+        );
+        return newSections;
+      }
+      return currentSections;
+    });
+  };
 
   useEffect(() => {
     controls.start((i) => ({
@@ -129,13 +229,15 @@ const SectionStack = () => {
         type: "spring",
         stiffness: 60,
         damping: 30,
-        duration: 1, // Duration should be a value in seconds, not milliseconds
+        duration: 1,
       },
     }));
   }, [controls, sections]);
 
   return (
     <div style={wrapperStyle}>
+      <Arrow direction="up" onClick={() => updateSections("up")} />
+      <div style={moveCardsTextStyle}>move cards</div>
       {sections.map((section, index) => (
         <motion.div
           custom={index}
@@ -144,42 +246,40 @@ const SectionStack = () => {
           style={{
             ...sectionStyle,
             backgroundColor: section.color,
-            zIndex: sections.length - index,
+            zIndex: sections.length - index, // Ensures proper stacking
           }}
         >
+          {/* Pass the left prop based on the index */}
+          {/* <Tab title={section.id.replace(/-/g, " ")} left={index % 2 === 0} /> */}
           {section.content}
         </motion.div>
       ))}
+      <Arrow direction="down" onClick={() => updateSections("down")} />
     </div>
   );
 };
 
-const wrapperStyle = {
-  position: "relative",
-  width: "100%", // Adjust to the width of your sections
-  height: "100vh", // Adjust to the height of your container
-  overflow: "hidden", // Prevent scrolling to see the dragged section
-  display: "flex",
-  flexDirection: "column-reverse", // Stack sections bottom to top
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-// Modify the styles for the cards
-const sectionStyle = {
-  position: "absolute",
-  width: "90%", // Adjust to the width of your sections
-  height: "90%", // Adjust to the height of your sections
-  borderRadius: "50px",
-  transformOrigin: "right center", // Set origin for rotation effect
-  listStyle: "none",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  flexDirection: "column",
-  padding: "50px",
-  boxSizing: "border-box",
-  perspective: "1000px", // Add perspective for 3D effect
-};
+const Arrow = ({ direction, onClick }) => (
+  <div
+    onClick={onClick}
+    style={{
+      ...arrowStyle,
+      top: "50%",
+      transform: direction === "up" ? "translateY(-250%)" : "translateY(150%)",
+    }}
+    className="blink"
+  >
+    <Icon
+      icon={
+        direction === "up"
+          ? "material-symbols-light:arrow-circle-up-outline"
+          : "material-symbols-light:arrow-circle-down-outline"
+      }
+      width="40"
+      height="40"
+      style={{ color: "#FF8C00" }}
+    />
+  </div>
+);
 
 export default SectionStack;
