@@ -1,10 +1,31 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion, useAnimation } from "framer-motion";
 import move from "lodash-move";
 import { Icon } from "@iconify/react";
 
+const getRandomAngle = () => Math.random() * 20 - 10; // Random angle between -10 and 10 degrees
+
+const generateRandomArrows = (count: Number) => {
+  return Array.from({ length: count }, () => ({
+    x: Math.random() * 100, // Random percentage position on x-axis
+    y: Math.random() * 100, // Random percentage position on y-axis
+    angle: Math.random() * 360, // Random angle in degrees
+  }));
+};
+
+// Define the arrow data with positions, angles, and text labels
+const arrowData = [
+  { angle: 130, length: "100px", text: "hackathons joined", number: 8 },
+  { angle: 200, length: "120px", text: "CTFs joined", number: 11 },
+  // Add more arrows as needed
+];
+
+/**
+ * OVERALL STYLES
+ */
 const arrowStyle = {
   position: "fixed",
   right: "50px",
@@ -37,7 +58,6 @@ const wrapperStyle = {
   //border color orange
 };
 
-// Modify the styles for the cards
 const sectionStyle = {
   position: "absolute",
   width: "90%", // Adjust to the width of your sections
@@ -55,19 +75,9 @@ const sectionStyle = {
   border: "5px solid #FF8C00",
 };
 
-const mainIntroStyle = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "100%", // Adjust height as needed
-  color: "#333", // Dark text color
-  fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', // Font similar to the image
-  padding: "20px", // Padding around the content
-  position: "relative", // For positioning the download button
-};
-
-// Update the styles for the download button
+/**
+ * FIRST CARD STYLE
+ */
 const downloadButtonStyle = {
   backgroundColor: "#e76e54", // Button color similar to the image
   color: "white",
@@ -94,37 +104,118 @@ const roleStyle = {
   fontWeight: "normal",
 };
 
-// // The tab styles for left and right positioning
-// const leftTabStyle = {
-//   left: "5px", // Position on the left edge
-//   transform: "translateY(-100%)", // Move it up 100% of its height
-// };
+const mainIntroStyle = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100%", // Adjust height as needed
+  color: "#333", // Dark text color
+  fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', // Font similar to the image
+  padding: "20px", // Padding around the content
+  position: "relative", // For positioning the download button
+};
 
-// const rightTabStyle = {
-//   right: "5px", // Position on the right edge
-//   transform: "translateY(-100%)", // Move it up 100% of its height
-// };
+/**
+ * SECOND CARD STYLE
+ */
+const placeholderFramesContainerStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "flex-start", // Align at the bottom
+  justifyContent: "space-between",
+  width: "100%", // Take up full width to allow space between frames
+  paddingBottom: "1.0rem", // Add some space below the frames
+};
 
-// // Existing tabStyle modified for common properties
-// const tabStyle = {
-//   position: "absolute",
-//   top: 0,
-//   padding: "5px 10px",
-//   backgroundColor: "#FF8C00",
-//   borderTopRightRadius: "5px",
-//   borderTopLeftRadius: "5px",
-//   color: "white",
-//   fontWeight: "bold",
-//   textAlign: "center",
-//   zIndex: 10, // Ensure it's above the card content
-// };
+const placeholderFrameStyle = {
+  width: "300px", // Set the desired width for your placeholder
+  height: "300px", // Set the desired height for your placeholder
+  marginRight: "10px", // Space between the frames
+  display: "inline-block", // To line them up in a row
+};
 
-// Tab component now accepts a 'left' prop to determine its position
-// const Tab = ({ title, left }) => (
-//   <div style={{ ...tabStyle, ...(left ? leftTabStyle : rightTabStyle) }}>
-//     {title}
-//   </div>
-// );
+const whoAmITitleStyle = {
+  fontSize: "2.5rem", // Adjust the font size as needed
+  fontWeight: "bold",
+  color: "#003366", // Adjust the color to match the image
+  alignSelf: "flex-start", // Align to the top of the flex container
+  paddingBottom: "1.0rem",
+  paddingTop: "1.0rem",
+};
+
+const whoAmITextStyle = {
+  color: "#333",
+  fontSize: "1.15rem",
+  lineHeight: "1.5",
+  marginBottom: "5rem", // Adjust space between text and picture placeholders
+};
+
+const whoAmIStyle = {
+  ...mainIntroStyle,
+  alignItems: "flex-start", // Align to the top of the flex container
+};
+
+/**
+ * THIRD CARD STYLE
+ */
+const getAchievementCircleStyle = () => ({
+  fontSize: "2rem",
+  fontWeight: "bold",
+  border: "2px solid #000",
+  borderRadius: "50%",
+  width: "64px",
+  height: "64px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  margin: "0 0 1rem",
+});
+
+const getAchievementTextStyle = () => ({
+  fontSize: "1rem",
+  textAlign: "center",
+});
+
+const getAchievementContainerStyle = () => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  margin: "0 1rem",
+});
+
+const achievementTitleStyle = {
+  fontSize: "2rem",
+  fontWeight: "bold",
+  color: "#003366",
+  alignSelf: "right",
+  paddingBottom: "1.0rem",
+  paddingTop: "1.0rem",
+};
+
+// Function to generate styles for arrows
+const getArrowStyle = (angle, length) => ({
+  position: "absolute",
+  transform: `rotate(${angle}deg)`,
+  transformOrigin: "0 0",
+  width: length,
+  height: "2px",
+  backgroundColor: "black", // Change as needed
+  // Position the arrows around the center of the section
+  left: "50%",
+  top: "50%",
+});
+
+// Function to generate styles for text at the end of arrows
+const getArrowTextStyle = (angle, length) => ({
+  position: "absolute",
+  transform: `translateX(${length})`,
+  // Adjust the positioning as necessary
+});
+
+/**
+ * FOURTH CARD STYLE
+ */
 
 const sectionsData = [
   {
@@ -135,44 +226,86 @@ const sectionsData = [
         <h1 style={nameStyle}>YUDHISHTHRA SUGUMARAN</h1>
         <h2 style={roleStyle}>developer + pentester</h2>
         <div style={downloadButtonStyle}>DOWNLOAD CV</div>{" "}
-        {/* Moved this line */}
       </div>
     ),
   },
   {
     id: "who-am-i",
-    color: "#f0f0f0",
+    color: "#ffffff",
     leftTab: true,
     content: (
-      // <div>
-      //   <h2>Who Am I?</h2>
-      //   <p>
-      //     I am a passionate developer with a love for creating seamless user
-      //     experiences.
-      //   </p>
-      // </div>
-      <div style={mainIntroStyle}>
-        <p>
-          I am a passionate developer with a love for creating seamless user
-          experiences.
+      <div style={whoAmIStyle}>
+        <h2 style={whoAmITitleStyle}>whoami</h2>
+        <p style={whoAmITextStyle}>
+          Yudhishthra Sugumaran is a software engineering student, hackathon
+          hacker, and cybersecurity enthusiast with a strong drive to positively
+          impact people's lives. When not coding or hacking, he likes to
+          binge-watch shows on Netflix, do activities that soothes the soul and
+          mind, and values spending quality time with family and friends.{" "}
+          <a href="url-to-full-story" className="underline italic text-right">
+            Read his full story here
+          </a>
         </p>
+        <div style={placeholderFramesContainerStyle}>
+          {[1, 2, 3, 4].map((_, index) => (
+            <div
+              key={index}
+              style={{
+                ...placeholderFrameStyle,
+                transform: `rotate(${getRandomAngle()}deg)`,
+                backgroundImage: `url('/image-${index + 1}.jpg')`, // Assume images are named image-1.jpg, image-2.jpg, etc.
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+          ))}
+        </div>
       </div>
     ),
   },
   {
     id: "achievements",
-    color: "#f0f0f0",
+    color: "#ffffff",
     content: (
-      <div>
-        <h2>My Achievements</h2>
-        <ul>
-          <li>
-            Lead Developer at XYZ Corp, where I increased performance by 20%.
-          </li>
-          <li>Speaker at the Annual Tech Conference 2022.</li>
-          <li>Published 10+ articles on modern web development practices.</li>
-        </ul>
-      </div>
+      <>
+        <div style={{ position: "relative", height: "200px", width: "200px" }}>
+          {" "}
+          {/* Adjust size as needed */}
+          {arrowData.map((arrow, index) => (
+            <React.Fragment key={index}>
+              <div style={getArrowStyle(arrow.angle, arrow.length)} />
+              <div style={getArrowTextStyle(arrow.angle, arrow.length)}>
+                {arrow.text}
+              </div>
+            </React.Fragment>
+          ))}
+          <h2 style={achievementTitleStyle}>achievements</h2>{" "}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+              padding: "2rem 0",
+            }}
+          >
+            {[
+              { number: "8", text: "hackathons joined" },
+              { number: "11", text: "CTFs joined" },
+              { number: "6", text: "awards received" },
+              { number: "6", text: "leadership roles" },
+              { number: "6", text: "community engagements" },
+            ].map((achievement, index) => (
+              <div key={index} style={getAchievementContainerStyle()}>
+                <div style={getAchievementCircleStyle()}>
+                  {achievement.number}
+                </div>
+                <div style={getAchievementTextStyle()}>{achievement.text}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </>
     ),
   },
   {
@@ -197,26 +330,19 @@ const SCALE_FACTOR = 0.05; // The scale difference between each section stack
 
 const SectionStack = () => {
   const [sections, setSections] = useState(sectionsData);
+  const [currentSection, setCurrentSection] = useState(sections[0].id);
   const controls = useAnimation();
 
   const updateSections = (direction) => {
     setSections((currentSections) => {
+      let newSections = [...currentSections];
       if (direction === "down") {
-        const newSections = move(
-          currentSections,
-          0,
-          currentSections.length - 1
-        );
-        return newSections;
+        newSections = move(currentSections, 0, currentSections.length - 1);
       } else if (direction === "up") {
-        const newSections = move(
-          currentSections,
-          currentSections.length - 1,
-          0
-        );
-        return newSections;
+        newSections = move(currentSections, currentSections.length - 1, 0);
       }
-      return currentSections;
+      setCurrentSection(newSections[0].id); // Update the current section
+      return newSections;
     });
   };
 
@@ -232,7 +358,7 @@ const SectionStack = () => {
         duration: 1,
       },
     }));
-  }, [controls, sections]);
+  }, [controls, sections, currentSection]);
 
   return (
     <div style={wrapperStyle}>
@@ -249,11 +375,10 @@ const SectionStack = () => {
             zIndex: sections.length - index, // Ensures proper stacking
           }}
         >
-          {/* Pass the left prop based on the index */}
-          {/* <Tab title={section.id.replace(/-/g, " ")} left={index % 2 === 0} /> */}
           {section.content}
         </motion.div>
       ))}
+
       <Arrow direction="down" onClick={() => updateSections("down")} />
     </div>
   );
