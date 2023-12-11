@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
-import move from "lodash-move";
 import { Icon } from "@iconify/react";
 import {
   HeroCard,
@@ -72,7 +71,12 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [messageInfo, setMessageInfo] = useState("");
 
-  const Arrow = ({ direction, onClick }) => (
+  type ArrowProps = {
+    direction: "up" | "down";
+    onClick: () => void;
+  };
+
+  const Arrow: React.FC<ArrowProps> = ({ direction, onClick }) => (
     <div
       onClick={onClick}
       style={{
@@ -124,13 +128,19 @@ const Home = () => {
   const [sections, setSections] = useState(sectionsData);
   const [currentSection, setCurrentSection] = useState(sections[0].id);
 
-  const updateSections = (direction) => {
+  const updateSections = (direction: "up" | "down") => {
     setSections((currentSections) => {
       let newSections = [...currentSections];
-      if (direction === "down") {
-        newSections = move(currentSections, 0, currentSections.length - 1);
-      } else if (direction === "up") {
-        newSections = move(currentSections, currentSections.length - 1, 0);
+      if (direction === "down" && newSections.length > 0) {
+        const firstElement = newSections.shift();
+        if (firstElement) {
+          newSections.push(firstElement);
+        }
+      } else if (direction === "up" && newSections.length > 0) {
+        const lastElement = newSections.pop();
+        if (lastElement) {
+          newSections.unshift(lastElement);
+        }
       }
       setCurrentSection(newSections[0].id); // Update the current section
       return newSections;

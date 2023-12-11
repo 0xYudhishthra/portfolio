@@ -139,7 +139,7 @@ const ContactFormCard: React.FC = () => {
 
   return (
     <div style={contactFormContainerStyle}>
-      <h2 style={contactFormTitleStyle}>Let's talk!</h2>
+      <h2 style={contactFormTitleStyle}>Let&apos;s talk!</h2>
       <p style={contactFormSubtitleStyle}>
         I&apos;m interested in freelance opportunities - especially projects
         that create real-world impact. However, if you&apos;d like to just say

@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "/public/logo.png";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname(); // Use the useRouter hook
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -68,7 +70,7 @@ export default function Navbar() {
 
       {/* Right section: Current site location */}
       <div>
-        <p className="text-gray-600 text-xl">{location.pathname}</p>
+        <p className="text-gray-600 text-xl">{pathname}</p>
       </div>
     </nav>
   );
