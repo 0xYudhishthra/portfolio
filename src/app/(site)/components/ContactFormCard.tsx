@@ -141,9 +141,9 @@ const ContactFormCard: React.FC = () => {
     <div style={contactFormContainerStyle}>
       <h2 style={contactFormTitleStyle}>Let's talk!</h2>
       <p style={contactFormSubtitleStyle}>
-        I’m interested in freelance opportunities - especially projects that
-        create real-world impact. However, if you’d like to just say hello,
-        don’t hesitate to drop your message!
+        I&apos;m interested in freelance opportunities - especially projects
+        that create real-world impact. However, if you&apos;d like to just say
+        hello, don&apos;t hesitate to drop your message!
       </p>
 
       <form style={formStyle} onSubmit={handleSubmit}>

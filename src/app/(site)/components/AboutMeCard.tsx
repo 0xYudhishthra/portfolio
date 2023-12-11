@@ -51,7 +51,7 @@ const HeroCard: React.FC = () => {
       <p style={whoAmITextStyle}>
         Yudhishthra Sugumaran is a software engineering student, hackathon
         hacker, and cybersecurity enthusiast with a strong drive to positively
-        impact people's lives. When not coding or hacking, he likes to
+        impact people&apos;s lives. When not coding or hacking, he likes to
         binge-watch shows on Netflix, do activities that soothes the soul and
         mind, and values spending quality time with family and friends.{" "}
         <a href="url-to-full-story" className="underline italic text-right">
