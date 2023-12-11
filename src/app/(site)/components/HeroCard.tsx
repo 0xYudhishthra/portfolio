@@ -1,22 +1,49 @@
-export default function ProfileHeader() {
+const downloadButtonStyle: React.CSSProperties = {
+  backgroundColor: "#e76e54", // Button color similar to the image
+  color: "white",
+  padding: "10px 20px",
+  textTransform: "uppercase",
+  fontWeight: "bold",
+  fontSize: "14px",
+  cursor: "pointer",
+  marginTop: "15px", // Add some space above the button
+  // Remove positioning styles that were previously used to place the button on the side
+};
+
+const nameStyle: React.CSSProperties = {
+  margin: "0",
+  fontSize: "3rem", // Large font size for the name
+  fontWeight: "bold",
+  letterSpacing: "1px", // Spacing between letters
+};
+
+const roleStyle: React.CSSProperties = {
+  margin: "0",
+  fontSize: "1.5rem", // Smaller font size for the role
+  color: "#555", // Slightly lighter text color for the role
+  fontWeight: "normal",
+};
+
+const mainIntroStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100%", // Adjust height as needed
+  color: "#333", // Dark text color
+  fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', // Font similar to the image
+  padding: "20px", // Padding around the content
+  position: "relative", // For positioning the download button
+};
+
+const HeroCard: React.FC = () => {
   return (
-    <header className="flex flex-col items-center justify-center h-screen">
-      <div className="flex flex-col items-center justify-center h-full">
-        <h1
-          className="text-5xl font-bold text-center"
-          style={{ color: "#2f5597" }}
-        >
-          YUDHISHTHRA SUGUMARAN
-        </h1>
-        <p className="text-3xl text-gray-600 mt-2 text-center">
-          developer + pentester
-        </p>
-      </div>
-      <div className="absolute bottom-0 w-full pb-10 text-center">
-        <a href="#next-section" className="text-gray-600 hover:text-gray-800">
-          <span className="text-4xl cursor-pointer">⬇️</span>
-        </a>
-      </div>
-    </header>
+    <div style={mainIntroStyle}>
+      <h1 style={nameStyle}>YUDHISHTHRA SUGUMARAN</h1>
+      <h2 style={roleStyle}>developer + pentester</h2>
+      <div style={downloadButtonStyle}>DOWNLOAD CV</div>{" "}
+    </div>
   );
-}
+};
+
+export default HeroCard;
