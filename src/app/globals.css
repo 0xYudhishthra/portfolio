@@ -1,6 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap");
+
+@font-face {
+  font-family: "IkarosSansLight";
+  src: url("/Ikaros-Light.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IkarosSansRegular";
+  src: url("/Ikaros-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 html {
   scroll-behavior: smooth;
@@ -14,4 +29,25 @@ html {
   50% {
     opacity: 0;
   }
+}
+
+/* styles/globals.css */
+body {
+  font-family: "Roboto Mono", monospace;
+  color: #333;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "IkarosSansRegular", sans-serif;
+  color: #000;
+}
+
+h4,
+h5,
+h6 {
+  font-family: "IkarosSansLight", sans-serif;
+  color: #000;
 }

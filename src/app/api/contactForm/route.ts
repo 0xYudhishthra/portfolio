@@ -7,11 +7,7 @@ export async function POST(request: NextRequest) {
     contactInfo: string,
     message: string
   ) => {
-    return `New Message Received:- 
-      \n\n
-      Name: ${name}\n\n
-      \n\nContact Info: ${contactInfo}\n\n
-      \n\nMessage: ${message}`;
+    return `New Message Received from Name: ${name} with Contact Info: ${contactInfo} and Message: ${message}`;
   };
 
   const requestBody = await request.json();
