@@ -90,15 +90,6 @@ h6 {
 .menu-item:focus::after {
   left: 0;
   right: 0;
-  background-color: orange; /* Transition to an orange background on hover/focus */
-}
-
-/* Hover effects for non-touch devices */
-@media (hover: hover) {
-  .menu-item:hover::after,
-  .menu-item:focus::after {
-    background-color: orange;
-  }
 }
 
 /* Larger screens styles */
@@ -110,5 +101,12 @@ h6 {
     margin: 1rem; /* adjust margin as needed */
     padding: 0.5rem 1rem; /* adjust padding as needed */
     font-size: 1.25rem; /* larger font size for larger screens */
+  }
+
+  .menu-item:hover::after,
+  .menu-item:focus::after {
+    left: 0;
+    right: 0;
+    background-color: orange; /* Transition to an orange background on hover/focus */
   }
 }
