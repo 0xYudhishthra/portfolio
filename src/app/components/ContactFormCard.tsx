@@ -121,7 +121,12 @@ const ContactFormCard: React.FC = () => {
     setFormStage(3); // Message sent
 
     // Reset form after a delay
-    setTimeout(() => setFormStage(0), 5000);
+    setTimeout(() => setFormStage(0), 2000);
+
+    // Reset form
+    formElements.name.value = "";
+    formElements.contactInfo.value = "";
+    formElements.message.value = "";
   };
 
   const getButtonText = () => {
@@ -143,7 +148,7 @@ const ContactFormCard: React.FC = () => {
       <p style={contactFormSubtitleStyle}>
         I&apos;m interested in freelance opportunities - especially projects
         that create real-world impact. However, if you&apos;d like to just say
-        hello, don&apos;t hesitate to drop your message!
+        hello, don&apos;t hesitate to drop a message!
       </p>
 
       <form style={formStyle} onSubmit={handleSubmit}>
@@ -200,7 +205,7 @@ const ContactFormCard: React.FC = () => {
       >
         This feature is powered by{" "}
         <a href="https://chat.blockscan.com/" target="_blank">
-          <u>Blockscan Chat.</u>
+          <u>Blockscan Chat</u>
         </a>
       </div>
     </div>

@@ -14,10 +14,6 @@ export default function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
   return (
     <nav className="sticky top-0 z-50 relative flex items-center justify-between bg-white p-4 md:pl-16 md:pt-10 md:pr-16">
       {/* Left section: Hamburger menu and logo */}
