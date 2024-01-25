@@ -1,3 +1,5 @@
+//page.tsx
+
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -18,8 +20,8 @@ import {
 const arrowContainerStyle: React.CSSProperties = {
   position: "fixed",
   top: "50%",
-  right: "2%", // Anchor to the right side of the screen
-  transform: "translateY(-50%)", // Only translate vertically
+  right: "30px", // Adjust this value as needed to create space from the right edge
+  transform: "translateY(-50%)",
   display: "flex",
   alignItems: "center",
   zIndex: 1000,
@@ -38,7 +40,6 @@ const moveCardsTextStyle: React.CSSProperties = {
 
 const wrapperStyle: React.CSSProperties = {
   position: "relative",
-  width: "95%", // Adjust to the width of your sections
   height: "80vh", // Adjust to the height of your container
   overflow: "hidden", // Prevent scrolling to see the dragged section
   display: "flex",
@@ -46,6 +47,8 @@ const wrapperStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   zIndex: 1,
+  marginRight: "auto",
+  padding: "5%", // Use padding instead of width to control the size
 };
 
 const sectionStyle: React.CSSProperties = {
@@ -59,7 +62,7 @@ const sectionStyle: React.CSSProperties = {
   justifyContent: "center",
   alignItems: "center",
   flexDirection: "column",
-  padding: "50px",
+  padding: "5%", // Use responsive padding
   boxSizing: "border-box",
   perspective: "1000px", // Add perspective for 3D effect
   border: "5px solid #FF8C00",
@@ -194,6 +197,7 @@ const Home = () => {
       )}
       {sections.map((section, index) => (
         <motion.div
+          className="absolute w-full max-w-screen-lg mx-auto rounded-lg p-4 md:p-8"
           custom={index}
           animate={controls}
           key={section.id}

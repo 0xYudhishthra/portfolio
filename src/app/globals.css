@@ -1,3 +1,5 @@
+/* globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -108,5 +110,46 @@ h6 {
     left: 0;
     right: 0;
     background-color: orange; /* Transition to an orange background on hover/focus */
+  }
+}
+
+/* Adjust menu items and fonts for smaller screens */
+@media (max-width: 768px) {
+  .menu-item {
+    /* Full width and increased padding for touch targets */
+    padding: 1.5rem;
+    font-size: 1.125rem; /* Slightly larger font for readability */
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-size: 1.5rem; /* Larger font size for readability */
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1.125rem;
+  }
+}
+
+/* Additional media query for very small screens */
+@media (max-width: 480px) {
+  .menu-item {
+    padding: 1rem; /* Adjust padding for very small screens */
+    font-size: 1rem; /* Adjust font size for very small screens */
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-size: 1.25rem; /* Adjust font size for very small screens */
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1rem;
   }
 }

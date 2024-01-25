@@ -1,3 +1,5 @@
+//AboutMeCard.tsx
+
 const placeholderFramesContainerStyle: React.CSSProperties = {
   display: "flex",
   flexWrap: "wrap",
@@ -9,9 +11,10 @@ const placeholderFramesContainerStyle: React.CSSProperties = {
 
 const placeholderFrameStyle: React.CSSProperties = {
   width: "300px", // Set the desired width for your placeholder
-  height: "300px", // Set the desired height for your placeholder
   marginRight: "10px", // Space between the frames
   display: "inline-block", // To line them up in a row
+  maxWidth: "100%", // Ensure the width doesn't exceed the container
+  height: "auto", // Maintain aspect ratio
 };
 
 const whoAmITitleStyle: React.CSSProperties = {
@@ -47,8 +50,8 @@ const HeroCard: React.FC = () => {
 
   return (
     <div style={whoAmIStyle}>
-      <h2 style={whoAmITitleStyle}>whoami</h2>
-      <p style={whoAmITextStyle}>
+      <h2 className="text-2xl md:text-3xl font-bold text-primary">whoami</h2>
+      <p className="text-base md:text-lg text-secondary mb-20">
         Yudhishthra Sugumaran is a software engineering student, hackathon
         hacker, and cybersecurity enthusiast with a strong drive to positively
         impact people&apos;s lives. When not coding or hacking, he likes to
@@ -62,6 +65,7 @@ const HeroCard: React.FC = () => {
         {[1, 2, 3, 4].map((_, index) => (
           <div
             key={index}
+            className="w-full sm:w-1/2 md:w-1/4 p-2" // Adjust width per breakpoint
             style={{
               ...placeholderFrameStyle,
               transform: `rotate(${getRandomAngle()}deg)`,
