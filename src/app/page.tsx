@@ -43,6 +43,7 @@ const wrapperStyle: React.CSSProperties = {
   flexDirection: "column-reverse", // Stack sections bottom to top
   alignItems: "center",
   justifyContent: "center",
+  zIndex: 1,
   //border color orange
 };
 

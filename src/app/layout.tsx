@@ -1,7 +1,6 @@
 "use client";
 
 import "./globals.css";
-import type { Metadata } from "next";
 import { Footer, Navbar } from "./components";
 import { ParallaxProvider } from "react-scroll-parallax";
 

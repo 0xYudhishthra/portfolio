@@ -4,7 +4,7 @@ const downloadButtonStyle: React.CSSProperties = {
   padding: "10px 20px",
   textTransform: "uppercase",
   fontWeight: "bold",
-  fontSize: "14px",
+  fontSize: "16px",
   cursor: "pointer",
   marginTop: "15px", // Add some space above the button
   // Remove positioning styles that were previously used to place the button on the side
@@ -41,7 +41,7 @@ const HeroCard: React.FC = () => {
     <div style={mainIntroStyle}>
       <h1 style={nameStyle}>YUDHISHTHRA SUGUMARAN</h1>
       <h2 style={roleStyle}>developer + pentester</h2>
-      <div style={downloadButtonStyle}>DOWNLOAD CV</div>{" "}
+      <p style={downloadButtonStyle}>DOWNLOAD CV</p>{" "}
     </div>
   );
 };

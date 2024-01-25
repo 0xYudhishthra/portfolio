@@ -25,7 +25,7 @@ const whoAmITitleStyle: React.CSSProperties = {
 
 const whoAmITextStyle: React.CSSProperties = {
   color: "#333",
-  fontSize: "1.15rem",
+  fontSize: "1.1rem",
   lineHeight: "1.5",
   marginBottom: "5rem", // Adjust space between text and picture placeholders
 };

@@ -1,7 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap");
+
+/* font face for roboto mono */
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap");
+  font-weight: normal;
+  font-style: normal;
+}
 
 @font-face {
   font-family: "IkarosSansLight";
@@ -31,8 +38,8 @@ html {
   }
 }
 
-/* styles/globals.css */
-body {
+body,
+p {
   font-family: "Roboto Mono", monospace;
   color: #333;
   line-height: 1.6;
@@ -50,4 +57,58 @@ h5,
 h6 {
   font-family: "IkarosSansLight", sans-serif;
   color: #000;
+}
+
+/* Responsive menu item styles */
+.menu-item {
+  position: relative;
+  display: block; /* change to block for full width links on mobile */
+  margin: 0.5rem 0;
+  padding: 1rem; /* larger padding for touch targets */
+  font-size: 1rem; /* adjust font size here */
+  text-align: center;
+  width: 100%; /* full width for mobile */
+  cursor: pointer;
+  text-decoration: none;
+  color: black; /* Replace with your color */
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+.menu-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  transition: left 0.4s ease, right 0.4s ease;
+  background-color: transparent; /* Start with a transparent background */
+}
+
+.menu-item:hover::after,
+.menu-item:focus::after {
+  left: 0;
+  right: 0;
+  background-color: orange; /* Transition to an orange background on hover/focus */
+}
+
+/* Hover effects for non-touch devices */
+@media (hover: hover) {
+  .menu-item:hover::after,
+  .menu-item:focus::after {
+    background-color: orange;
+  }
+}
+
+/* Larger screens styles */
+@media (min-width: 768px) {
+  /* Adjust as needed for your design */
+  .menu-item {
+    display: inline-block; /* inline-block for horizontal menu */
+    width: auto; /* auto width for larger screens */
+    margin: 1rem; /* adjust margin as needed */
+    padding: 0.5rem 1rem; /* adjust padding as needed */
+    font-size: 1.25rem; /* larger font size for larger screens */
+  }
 }

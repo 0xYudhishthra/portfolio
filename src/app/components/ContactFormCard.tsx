@@ -12,7 +12,7 @@ const contactFormContainerStyle: React.CSSProperties = {
 };
 
 const contactFormTitleStyle: React.CSSProperties = {
-  fontSize: "1.5rem",
+  fontSize: "2rem",
   fontWeight: "bold",
   color: "#003366",
   textAlign: "left", // Align text to the left
@@ -20,7 +20,7 @@ const contactFormTitleStyle: React.CSSProperties = {
 };
 
 const contactFormSubtitleStyle: React.CSSProperties = {
-  fontSize: "1.4rem",
+  fontSize: "1.1rem",
   color: "#333",
   textAlign: "left", // Align text to the left
   marginBottom: "1.6rem", // Adjust this as needed to control space below the title
@@ -195,7 +195,7 @@ const ContactFormCard: React.FC = () => {
           position: "absolute",
           right: "15px",
           bottom: "15px",
-          fontSize: "1rem",
+          fontSize: "0.9rem",
         }}
       >
         This feature is powered by{" "}

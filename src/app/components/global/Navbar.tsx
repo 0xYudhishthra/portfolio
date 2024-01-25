@@ -14,8 +14,12 @@ export default function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <nav className="relative flex items-center justify-between bg-white p-4 md:pl-16 md:pt-10 md:pr-16">
+    <nav className="sticky top-0 z-50 relative flex items-center justify-between bg-white p-4 md:pl-16 md:pt-10 md:pr-16">
       {/* Left section: Hamburger menu and logo */}
       <div className="flex items-center">
         <button onClick={toggleMenu} className="focus:outline-none z-20 mr-5">
@@ -50,28 +54,23 @@ export default function Navbar() {
 
       {/* Center section: Navigation links with responsive design */}
       <div
-        className={`${
-          isMenuOpen ? "flex" : "hidden"
-        } absolute md:relative flex-col md:flex-row items-center justify-center top-16 md:top-0 left-0 md:left-auto w-full md:w-auto bg-white md:bg-transparent z-10 transition-all ease-out duration-500`}
+        className={`fixed inset-0 z-1 flex-col items-center justify-center bg-white p-4 overflow-auto transition-transform transform ${
+          isMenuOpen
+            ? "flex opacity-100 scale-100"
+            : "hidden opacity-0 scale-95"
+        } ease-out duration-500`}
       >
-        <Link
-          href="/about"
-          className="px-4 py-2 hover:bg-gray-200 md:hover:bg-transparent md:hover:text-gray-700"
-        >
+        {/* Updated link styles here */}
+        <Link href="/about" className="menu-item">
           about
         </Link>
-        <Link
-          href="/experience"
-          className="px-4 py-2 hover:bg-gray-200 md:hover:bg-transparent md:hover:text-gray-700"
-        >
+        <Link href="/experience" className="menu-item">
           experience
         </Link>
-        <Link
-          href="/projects"
-          className="px-4 py-2 hover:bg-gray-200 md:hover:bg-transparent md:hover:text-gray-700"
-        >
+        <Link href="/projects" className="menu-item">
           projects
         </Link>
+        {/* Add more links as needed */}
       </div>
 
       {/* Right section: Current site location */}
