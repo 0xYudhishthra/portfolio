@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
 import {
   HeroCard,
@@ -16,26 +16,24 @@ import {
 /**
  * OVERALL STYLES
  */
-
-const arrowContainerStyle: React.CSSProperties = {
+const arrowStyle: React.CSSProperties = {
   position: "fixed",
-  top: "50%",
-  right: "30px", // Adjust this value as needed to create space from the right edge
-  transform: "translateY(-50%)",
-  display: "flex",
-  alignItems: "center",
+  right: "50px",
+  fontSize: "24px",
+  cursor: "pointer",
   zIndex: 1000,
-  flexDirection: "column",
+  // Ensure transform origin is consistent
+  transformOrigin: "center",
 };
 
 const moveCardsTextStyle: React.CSSProperties = {
+  position: "fixed",
   right: "20px",
   top: "50%",
+  transform: "translateY(-50%) rotate(90deg)",
   color: "#FF8C00",
   fontSize: "18px",
   zIndex: 1000,
-  paddingTop: "20px",
-  paddingBottom: "20px",
 };
 
 const wrapperStyle: React.CSSProperties = {
@@ -43,7 +41,7 @@ const wrapperStyle: React.CSSProperties = {
   height: "80vh", // Adjust to the height of your container
   overflow: "hidden", // Prevent scrolling to see the dragged section
   display: "flex",
-  flexDirection: "column", // Stack sections bottom to top
+  flexDirection: "column-reverse", // Stack sections bottom to top
   alignItems: "center",
   justifyContent: "center",
   zIndex: 1,
@@ -75,22 +73,6 @@ const Home = () => {
   const controls = useAnimation();
   const [loading, setLoading] = useState(false);
   const [messageInfo, setMessageInfo] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // Function to check the window width
-    const checkDeviceSize = () => {
-      const match = window.matchMedia("(max-width: 768px)").matches;
-      setIsMobile(match);
-    };
-
-    // Check once and also add event listener for resizing
-    checkDeviceSize();
-    window.addEventListener("resize", checkDeviceSize);
-
-    // Clean up event listener
-    return () => window.removeEventListener("resize", checkDeviceSize);
-  }, []);
 
   type ArrowProps = {
     direction: "up" | "down";
@@ -98,18 +80,27 @@ const Home = () => {
   };
 
   const Arrow: React.FC<ArrowProps> = ({ direction, onClick }) => (
-    <Icon
+    <div
       onClick={onClick}
+      style={{
+        ...arrowStyle,
+        top: "50%",
+        transform:
+          direction === "up" ? "translateY(-250%)" : "translateY(150%)",
+      }}
       className="blink"
-      icon={
-        direction === "up"
-          ? "material-symbols-light:arrow-circle-up-outline"
-          : "material-symbols-light:arrow-circle-down-outline"
-      }
-      width="40"
-      height="40"
-      style={{ color: "#FF8C00", cursor: "pointer", zIndex: 1000 }}
-    />
+    >
+      <Icon
+        icon={
+          direction === "up"
+            ? "material-symbols-light:arrow-circle-up-outline"
+            : "material-symbols-light:arrow-circle-down-outline"
+        }
+        width="40"
+        height="40"
+        style={{ color: "#FF8C00" }}
+      />
+    </div>
   );
 
   const sectionsData = [
@@ -159,18 +150,6 @@ const Home = () => {
     });
   };
 
-  // Function to handle end of drag event
-  const handleDragEnd = (event: any, info: any) => {
-    const offset = info.offset.y;
-    const velocity = info.velocity.y;
-
-    if (offset < 0 || velocity < -10) {
-      updateSections("up");
-    } else if (offset > 0 || velocity > 10) {
-      updateSections("down");
-    }
-  };
-
   useEffect(() => {
     controls.start((i) => ({
       y: i * -SECTION_OFFSET,
@@ -187,14 +166,8 @@ const Home = () => {
 
   return (
     <div style={wrapperStyle}>
-      {/* Arrow container */}
-      {!isMobile && (
-        <div style={arrowContainerStyle}>
-          <Arrow direction="up" onClick={() => updateSections("up")} />
-          <div style={moveCardsTextStyle}>move cards</div>
-          <Arrow direction="down" onClick={() => updateSections("down")} />
-        </div>
-      )}
+      <Arrow direction="up" onClick={() => updateSections("up")} />
+      <div style={moveCardsTextStyle}>move cards</div>
       {sections.map((section, index) => (
         <motion.div
           className="absolute w-full max-w-screen-lg mx-auto rounded-lg p-4 md:p-8"
@@ -206,14 +179,12 @@ const Home = () => {
             backgroundColor: section.color,
             zIndex: sections.length - index, // Ensures proper stacking
           }}
-          drag="y" // Enable dragging on y-axis
-          dragConstraints={{ top: 0, bottom: 0 }} // Constrain drag to vertical axis
-          dragElastic={1} // Elasticity of drag
-          onDragEnd={handleDragEnd} // Handle the drag end event
         >
           {section.content}
         </motion.div>
       ))}
+
+      <Arrow direction="down" onClick={() => updateSections("down")} />
     </div>
   );
 };
